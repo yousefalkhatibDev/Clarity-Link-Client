@@ -1,0 +1,2 @@
+main: rgb(29,60,107)
+buttonMain: rgb(73,149,243)
