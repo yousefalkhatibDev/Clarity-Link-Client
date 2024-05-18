@@ -5,6 +5,7 @@ import * as Sharing from "expo-sharing";
 import Icon from 'react-native-vector-icons/Ionicons';
 import { Button } from '@rneui/themed';
 import axios from 'axios'
+import WebSocket from 'react-native-websocket'; // Import WebSocket from react-native-websocket
 import {
     Menu,
     MenuOptions,
@@ -153,6 +154,18 @@ export default function RecieveSrs({ navigation, route }) {
         setModalVisible(!isModalVisible);
     };
 
+    const handleMessage = (data) => {
+        if (data.finish === true) {
+            navigation.navigate("HiddenStack", {
+                screen: "Projects",
+                params: {
+                    "userType": route.params.userType,
+
+                }
+            })
+        }
+    }
+
     useEffect(() => {
         fetchIsSrsFileUploaded()
         fetchCurrentProjectId()
@@ -240,7 +253,22 @@ export default function RecieveSrs({ navigation, route }) {
                     <Button title="Close" onPress={toggleModal} />
                 </View>
             </Modal>
+            <WebSocket
+                url="ws://192.168.0.110:8094"
+                onMessage={(message) => {
+                    try {
+                        // // console.log(message.data)
+                        const parsedMessage = JSON.parse(message.data);
+                        // console.log(parsedMessage)
+                        handleMessage(parsedMessage);
+                    } catch (error) {
+                        console.error('Error parsing WebSocket message:', error);
+                    }
+                }
+                }
 
+                onOpen={() => console.log("WebSocket connection opened")}
+            />
         </SafeAreaView >
     )
 }

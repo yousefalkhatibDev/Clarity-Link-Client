@@ -92,6 +92,16 @@ export default function AddProject({ navigation }) {
         }
     }
 
+    const signOut = async () => {
+        const response = await axios.post(`http://192.168.0.110:8080/logout`);
+        if (response.data.error) {
+            // setSnackMsg(response.data.error);
+            // onToggleSnackBar();
+        } else {
+            navigation.navigate("Dashboard", { "data": "start" })
+        }
+    }
+
     const toggleModal = () => {
         setModalVisible(!isModalVisible);
     };
@@ -102,6 +112,15 @@ export default function AddProject({ navigation }) {
 
     return (
         < SafeAreaView style={styles.container}>
+            <Pressable style={styles.pressableContainer} onPress={signOut}>
+                <View style={styles.iconContainer}>
+                    <Icon
+                        name='log-out-outline'
+                        size={24}
+                        color='rgb(110, 110, 110)'
+                    />
+                </View>
+            </Pressable>
             <View style={{ ...styles.inputContainer, marginTop: 100 }}>
                 <Text style={styles.text}>Project Title:</Text>
                 <Input
@@ -225,6 +244,23 @@ const styles = StyleSheet.create({
     },
     pressableContainerInput: {
         width: 40,
+    },
+    iconContainer: {
+        width: 45,
+        height: 45,
+        borderRadius: 15,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'rgb(250, 250, 250)',
+        elevation: 5,
+        borderWidth: 1,
+        borderColor: 'rgba(255, 255, 255, 0)',
+    },
+    pressableContainer: {
+        position: 'absolute',
+        top: 50,
+        right: 25,
+        zIndex: 1000,
     },
     labelContainer: {
         flexDirection: "row",

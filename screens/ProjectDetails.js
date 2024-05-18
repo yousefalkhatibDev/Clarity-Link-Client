@@ -10,6 +10,7 @@ import {
     MenuTrigger,
     renderers
 } from 'react-native-popup-menu';
+import Modal from "react-native-modal";
 
 
 
@@ -33,6 +34,26 @@ export default function ProjectDetails({ navigation, route }) {
         } catch (error) {
             console.log(error)
         }
+    }
+
+    const finishProject = async () => {
+        try {
+            const response = await axios.post(`http://192.168.0.110:8080/finishProject`, {
+                ProjectId: route.params.currentProjectId,
+                Project: route.params.Project
+            });
+            if (response.data.error) {
+                // setSnackMsg(response.data.error);
+                // onToggleSnackBar();
+            } else {
+                navigation.navigate("HiddenStack", {
+                    screen: "AddProject",
+                })
+            }
+        } catch (err) {
+            console.log(err)
+        }
+
     }
 
 
@@ -136,8 +157,27 @@ export default function ProjectDetails({ navigation, route }) {
                 buttonStyle={styles.button}
                 containerStyle={styles.buttonContainer}
                 onPress={() => { navigation.navigate('HiddenStack', { screen: 'AcceptBids', params: { "currentProjectId": route.params.currentProjectId, "Project": route.params.Project } }) }}
-                disabled={bidButtonDisabled}
             />
+
+            <Button
+                title="Finish Project"
+                titleStyle={{ fontWeight: '700', color: "rgb(140, 140, 140)" }}
+                buttonStyle={styles.buttonFinish}
+                containerStyle={styles.buttonContainer}
+                onPress={toggleModal}
+            />
+
+            <Modal isVisible={isModalVisible}>
+                <View style={styles.modalContainer}>
+                    <View>
+                        <Text>Are you sure you want to finish working on this project?</Text>
+                    </View>
+                    <View style={styles.modalButtonsContainer}>
+                        <Button title="Cancel" buttonStyle={{ backgroundColor: "rgb(240, 240, 240)", borderColor: "rgb(220, 220, 220)", borderWidth: 1 }} containerStyle={{ width: "48%" }} titleStyle={{ color: "rgb(100, 100, 100)" }} onPress={toggleModal} />
+                        <Button title="Yes" buttonStyle={{ backgroundColor: " rgb(73,149,243)", borderColor: "rgb(53,129,203)", borderWidth: 1 }} containerStyle={{ width: "48%" }} onPress={finishProject} />
+                    </View>
+                </View>
+            </Modal>
         </View>
     )
 }
@@ -148,6 +188,18 @@ const styles = StyleSheet.create({
         alignItems: "center",
         // backgroundColor: "rgb(29,60,107)",
         backgroundColor: "rgb(250, 250, 250)",
+    },
+    modalContainer: {
+        minHeight: "30%",
+        backgroundColor: "rgb(255, 255, 255)",
+        padding: 20,
+        borderRadius: 8,
+        justifyContent: "space-between",
+    },
+    modalButtonsContainer: {
+        flexDirection: "row",
+        width: "100%",
+        justifyContent: "space-between"
     },
     cardContainer: {
         width: "100%",
@@ -189,6 +241,13 @@ const styles = StyleSheet.create({
     },
     button: {
         backgroundColor: 'rgb(73,149,243)',
+        borderColor: 'transparent',
+        borderWidth: 0,
+        borderRadius: 7,
+        padding: 15,
+    },
+    buttonFinish: {
+        backgroundColor: 'rgb(220,220,220)',
         borderColor: 'transparent',
         borderWidth: 0,
         borderRadius: 7,

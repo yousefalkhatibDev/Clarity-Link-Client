@@ -58,11 +58,7 @@ const SelectChats = ({ navigation, route }) => {
     }
 
     const goBack = () => {
-        if (route.params.redirectToDetails && route.params.redirectToDetails === true) {
-            navigation.navigate("Dashboard", { "data": "start" })
-        } else {
-            navigation.goBack()
-        }
+        navigation.navigate("Dashboard", { "data": "start" })
     }
 
     useEffect(() => {

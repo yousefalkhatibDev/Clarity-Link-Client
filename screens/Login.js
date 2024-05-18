@@ -61,21 +61,19 @@ export default function LoginScreen({ navigation, route }) {
         let valid = true;
 
         try {
-            // if (isEmailValid() === false) {
-            //     valid = false;
-            // }
-            // if (isPasswordValid() === false) {
-            //     valid = false;
-            // }
-            // if (!valid) {
-            //     return; // Stop execution
-            // }
+            if (isEmailValid() === false) {
+                valid = false;
+            }
+            if (isPasswordValid() === false) {
+                valid = false;
+            }
+            if (!valid) {
+                return; // Stop execution
+            }
 
             const response = await axios.post('http://192.168.0.110:8080/login', {
-                email: "yousef@gmail.com",
-                password: "7946135",
-                // email,
-                // password,
+                email,
+                password,
             });
 
             if (response.data.ErrorMessage) {

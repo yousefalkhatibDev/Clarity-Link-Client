@@ -5,6 +5,7 @@ import * as Clipboard from 'expo-clipboard';
 import * as DocumentPicker from 'expo-document-picker';
 import { Button } from '@rneui/themed';
 import { Snackbar } from 'react-native-paper';
+import WebSocket from 'react-native-websocket'; // Import WebSocket from react-native-websocket
 import axios from 'axios';
 import {
     Menu,
@@ -208,6 +209,18 @@ export default function RecieveInput({ navigation, route }) {
         fetchCurrentProjectId()
     }, [])
 
+    const handleMessage = (data) => {
+        if (data.finish === true) {
+            navigation.navigate("HiddenStack", {
+                screen: "Projects",
+                params: {
+                    "userType": route.params.userType,
+
+                }
+            })
+        }
+    }
+
     useEffect(() => {
         if (currentProjectId !== "") {
             fetchProject()
@@ -306,7 +319,22 @@ export default function RecieveInput({ navigation, route }) {
                     <Button title="Close" onPress={toggleModal} />
                 </View>
             </Modal>
+            <WebSocket
+                url="ws://192.168.0.110:8094"
+                onMessage={(message) => {
+                    try {
+                        // // console.log(message.data)
+                        const parsedMessage = JSON.parse(message.data);
+                        // console.log(parsedMessage)
+                        handleMessage(parsedMessage);
+                    } catch (error) {
+                        console.error('Error parsing WebSocket message:', error);
+                    }
+                }
+                }
 
+                onOpen={() => console.log("WebSocket connection opened")}
+            />
         </SafeAreaView >
     )
 }

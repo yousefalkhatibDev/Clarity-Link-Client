@@ -92,14 +92,12 @@ export default function DashboardScreen({ navigation, route }) {
                     } else if (isProjectQueryDone === 0) {
                         navigation.navigate('HiddenStack', { screen: 'ProjectQuestions', params: { "ProjectId": currentProjectId, } })
                     } else if (isProjectQueryDone === 1 && responseInitial.data.results[0].Initial_context !== null) {
-                        console.log("GOING THERE")
                         navigation.navigate("HiddenStack", {
                             screen: "ProjectDetails",
                             params: {
                                 "currentProjectId": currentProjectId,
                                 "Project": response.data.results[0],
                                 "userType": accType,
-
                             }
                         })
                     }
